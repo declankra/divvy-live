@@ -29,14 +29,19 @@ def fetch_station_capacity():
         output_file = "station_capacity.csv"
         
         with open(output_file, "w", newline="") as f:
-            fieldnames = ["station_id", "name", "lat", "lon", "capacity"]
+            fieldnames = ["station_id", "legacy_id", "name", "lat", "lon", "capacity"]
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
             
             # Write each station's data
             for station in data:
                 writer.writerow({
-                    k: station[k] for k in fieldnames
+                    "station_id": station["station_id"],
+                    "legacy_id": station.get("short_name", ""),  # This is the legacy ID used in historical data
+                    "name": station["name"],
+                    "lat": station["lat"],
+                    "lon": station["lon"],
+                    "capacity": station["capacity"]
                 })
         
         print(f"✅ Successfully created {output_file}")
@@ -49,7 +54,7 @@ def fetch_station_capacity():
             for i, row in enumerate(reader):
                 if i >= 3:
                     break
-                print(f"  {row['station_id']}: {row['name']} (capacity: {row['capacity']})")
+                print(f"  {row['station_id']} (legacy: {row['legacy_id']}): {row['name']} (capacity: {row['capacity']})")
         
         return output_file
         
