@@ -2,6 +2,8 @@
 
 A live dashboard that answers the question: **Which Divvy bike station needs more racks?** by calculating a Dock Pressure Index (DPI) from historical trip data and real-time capacity monitoring.
 
+🌐 **Live Dashboard**: https://divvy-live.vercel.app/
+
 ## Project Overview
 
 ### Problem Statement

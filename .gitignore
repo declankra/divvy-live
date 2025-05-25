@@ -12,6 +12,8 @@ eggs/
 .eggs/
 lib/
 lib64/
+# But allow Next.js lib directories
+!website-reporting/src/lib/
 parts/
 sdist/
 var/
