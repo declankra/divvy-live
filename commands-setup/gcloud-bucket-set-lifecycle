@@ -1,0 +1,29 @@
+#!/bin/bash
+# This script sets the lifecycle policy for an existing Google Cloud Storage bucket.
+# It assumes BUCKET environment variable is set, e.g.
+# export REG=us-central1
+# export BUCKET=gs://divvy-live-$REG
+
+if [ -z "$BUCKET" ]; then
+  echo "Error: BUCKET environment variable is not set."
+  echo "Please set it before running this script. For example:"
+  echo "export REG=us-central1"
+  echo "export BUCKET=gs://divvy-live-\$REG"
+  exit 1
+fi
+
+echo "Attempting to set lifecycle policy for bucket: $BUCKET"
+
+gsutil lifecycle set - $BUCKET <<EOF
+{
+  "rule": [
+    {"action": {"type": "Delete"}, "condition": {"age": 30}}
+  ]
+}
+EOF
+
+if [ $? -eq 0 ]; then
+  echo "Lifecycle policy updated successfully for $BUCKET."
+else
+  echo "Failed to update lifecycle policy for $BUCKET."
+fi 

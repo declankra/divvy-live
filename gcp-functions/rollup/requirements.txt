@@ -1,0 +1,6 @@
+duckdb
+gcsfs
+google-cloud-storage
+pandas
+functions-framework
+pytz

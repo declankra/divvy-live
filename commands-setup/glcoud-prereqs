@@ -1,0 +1,11 @@
+# install / auth
+brew install --cask google-cloud-sdk
+gcloud auth login
+gcloud config set project divvy-460820
+gcloud services enable run.googleapis.com \
+                       cloudbuild.googleapis.com \
+                       cloudscheduler.googleapis.com \
+                       storage.googleapis.com
+# pick a single region for everything
+REG=us-central1
+gcloud config set run/region $REG

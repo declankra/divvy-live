@@ -1,0 +1,11 @@
+gcloud functions deploy divvy-rollup \
+  --gen2 \
+  --runtime=python312 \
+  --region=us-central1 \
+  --source=gcp-functions/rollup \
+  --entry-point=rollup \
+  --timeout=540s \
+  --memory=512Mi \
+  --set-env-vars=BUCKET_NAME=divvy-live-us-central1,GCP_PROJECT=divvy-460820 \
+  --trigger-http \
+  --allow-unauthenticated 

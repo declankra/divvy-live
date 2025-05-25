@@ -1,0 +1,9 @@
+BUCKET=gs://divvy-live-$REG
+gsutil mb -l $REG $BUCKET
+gsutil lifecycle set - $BUCKET <<EOF
+{
+  "rule": [
+    {"action": {"type": "Delete"}, "condition": {"age": 30}}
+  ]
+}
+EOF

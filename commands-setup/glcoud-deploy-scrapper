@@ -1,0 +1,11 @@
+gcloud functions deploy divvy-scraper \
+  --gen2 \
+  --runtime=python312 \
+  --region=$REG \
+  --source=gcp-functions/scrapper \
+  --entry-point=grab \
+  --timeout=30s \
+  --memory=128Mi \
+  --set-env-vars=BUCKET_NAME=divvy-live-$REG \
+  --trigger-http \
+  --allow-unauthenticated

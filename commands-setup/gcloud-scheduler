@@ -1,0 +1,15 @@
+# every 15 minutes
+gcloud scheduler jobs create http divvy-scraper-15 \
+  --schedule "*/15 * * * *" \
+  --uri $(gcloud functions describe divvy-scraper --gen2 --region us-central1 --format 'value(serviceConfig.uri)') \
+  --http-method GET \
+  --time-zone "America/Chicago" \
+  --location us-central1
+
+# daily roll-up at 02:15
+gcloud scheduler jobs create http divvy-rollup-daily \
+  --schedule "15 2 * * *" \
+  --uri $(gcloud functions describe divvy-rollup --gen2 --region us-central1 --format 'value(serviceConfig.uri)') \
+  --http-method GET \
+  --time-zone "America/Chicago" \
+  --location us-central1

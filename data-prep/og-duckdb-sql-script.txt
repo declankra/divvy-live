@@ -1,0 +1,21 @@
+# this was never used, as the ./process-trips.py python script replaced it
+duckdb flows.duckdb <<'SQL'
+INSTALL httpfs; LOAD httpfs;
+
+CREATE OR REPLACE TABLE trips AS
+SELECT * FROM glob('*.csv', union_by_name=true);
+
+CREATE OR REPLACE TABLE station_flows AS
+WITH s AS (
+  SELECT start_station_id AS station_id, COUNT(*) AS starts
+  FROM trips GROUP BY 1
+),
+e AS (
+  SELECT end_station_id   AS station_id, COUNT(*) AS ends
+  FROM trips GROUP BY 1
+)
+SELECT COALESCE(s.station_id,e.station_id) AS station_id,
+       COALESCE(starts,0) AS starts,
+       COALESCE(ends,0)   AS ends
+FROM   s FULL OUTER JOIN e USING(station_id);
+SQL
