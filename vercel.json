@@ -3,6 +3,5 @@
   "outputDirectory": "website-reporting/.next",
   "installCommand": "cd website-reporting && npm install",
   "devCommand": "cd website-reporting && npm run dev",
-  "framework": "nextjs",
-  "rootDirectory": "website-reporting"
+  "framework": "nextjs"
 } 
