@@ -5,7 +5,7 @@ Divvy Data Used Recap
 
 | #     | Dataset (⇢ Bucket path)                                                                               | Original source & endpoint                                                                                                                             | Who grabs it                                        | Fields you actually use                                                                | How it feeds the DPI metric                                                                                                            |
 | ----- | ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| **1** | **Real-time station status snapshots**  <br>`gs://divvy-live-REG/snapshots/YYYY/MM/DD/HHMMSS.json.gz` | **GBFS** feed: <br>`https://gbfs.divvybikes.com/gbfs/en/station_status.json`                                                                           | **scraper Cloud Function** <br>(runs every 15 min)  | `station_id`  <br>`num_docks_available`  <br>`is_returning`                            | 1. For each snapshot, `is_full = num_docks_available == 0 AND is_returning`. <br>2. Daily roll-up averages `is_full` ⇒ **% time full** |
+| **1** | **Real-time station status snapshots**  <br>`gs://divvy-live-REG/snapshots/YYYY/MM/DD/HHMMSS.json.gz` | **GBFS** feed: <br>`https://gbfs.divvybikes.com/gbfs/en/station_status.json`                                                                           | **scraper Cloud Function** <br>(runs every 20 min)  | `station_id`  <br>`num_docks_available`  <br>`is_returning`                            | 1. For each snapshot, `is_full = num_docks_available == 0 AND is_returning`. <br>2. Daily roll-up averages `is_full` ⇒ **% time full** |
 | **2** | **Station metadata / capacity**  <br>`gs://divvy-live-REG/station_capacity.csv`                       | Either of two interchangeable sources: <br>• GBFS `station_information.json` (*capacity field*) <br>• Chicago Data Portal "Divvy Bicycle Stations" CSV | **one-off manual download** (or tiny helper script) | `station_id`  <br>`capacity` (dock count)  <br>`lat`, `lon`, `name`                    | *Divisor* in `overflow_per_dock = (ends − starts) / capacity`                                                                          |
 | **3** | **Historical trip flows**  <br>`gs://divvy-live-REG/aggregated/station_flows.parquet`                 | Chicago Data Portal monthly files: <br>`Divvy_Trips_2024_MM.csv` (…2023, 2022)                                                                         | **local DuckDB notebook** (run once)                | `start_station_id`, `end_station_id` → aggregated to: <br>`starts`, `ends` per station | 1. Computes **net overflow** `(ends − starts)` <br>2. Roll-up divides by capacity ⇒ overflow / dock                                    |
 | **4** | **Live DPI table**  <br>`gs://divvy-live-REG/aggregated/live_dpi.json.gz`                             | Produced—not sourced—by your roll-up function                                                                                                          | **rollup Cloud Function** (daily)                   | `station_id`, `overflow_per_dock`, `pct_full`, `dpi` (product)                         | Exposed to dashboard via read-API; drives "top-stations" table & map                                                                   |
@@ -15,7 +15,7 @@ Quick reference table of required Divvy data
 
 | Artifact in bucket                 | Built from                                               | Grabbed by                      | Used for         |
 | ---------------------------------- | -------------------------------------------------------- | ------------------------------- | ---------------- |
-| `snapshots/YYYY/...`               | GBFS `station_status.json`                               | **scraper Fn** (15 min)         | % Time Full      |
+| `snapshots/YYYY/...`               | GBFS `station_status.json`                               | **scraper Fn** (20 min)         | % Time Full      |
 | `station_capacity.csv`             | GBFS `station_information.json`                          | one-off helper script (monthly) | capacity divisor |
 | `aggregated/station_flows.parquet` | Monthly trip CSVs from `divvy-tripdata.s3.amazonaws.com` | local DuckDB job (once)         | net overflow     |
 | `aggregated/live_dpi.json.gz`      | roll-up Fn (daily) combining the three above             | —                               | dashboard feed   |
@@ -37,7 +37,7 @@ divvy-live/                      ← Monorepo for data pipeline + website
 ├─ debugging-prompts/            ← Reports to facilitate development
 │
 ├─ gcp-functions/
-│   ├─ scraper/                  ← 15-min snapshot (write path)
+│   ├─ scraper/                  ← 20-min snapshot (write path)
 │   │   ├─ main.py
 │   │   └─ requirements.txt
 │   │
@@ -77,9 +77,10 @@ divvy-live/                      ← Monorepo for data pipeline + website
 
 
 
-- live % full data updates every 15 min
+- live % full data updates every 20 min
 - rollup aggregation of data happens every day (2:15AM)
-- historical trip data used in overflow calculation is last 12 months from MAy 24 2025
+- historical trip data used in overflow calculation is last 12 months from May 24 2025
+- also calculates daily % full numbers to save memory.money on duckdb calcs
 
 
 
