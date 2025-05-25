@@ -11,7 +11,7 @@
 #
 # What it does:
 #   1. Exports 'station_flows' table from data-prep/flows.duckdb to station_flows.parquet
-#   2. Uploads the Parquet file to gs://divvy-live-us-central1/aggregated/
+#   2. Uploads the Parquet file to gs://YOUR_BUCKET_NAME/aggregated/
 #   3. Optionally cleans up local files
 #
 # Prerequisites:
@@ -31,12 +31,14 @@
 
 # to execute: bash data-prep/export-and-upload.sh
 
+# CONFIGURATION: Update these with your actual values
+BUCKET_NAME="YOUR_BUCKET_NAME"  # Replace with your actual bucket name
 
 # Export the DuckDB database to a Parquet file
 duckdb data-prep/flows.duckdb "COPY station_flows TO 'data-prep/station_flows.parquet' (FORMAT parquet);"
 
 # Upload the Parquet file to the Google Cloud Storage bucket
-gsutil cp data-prep/station_flows.parquet gs://divvy-live-us-central1/aggregated/
+gsutil cp data-prep/station_flows.parquet gs://$BUCKET_NAME/aggregated/
 
 # Clean up the local file (consider if you want to keep the parquet locally too)
 # rm data-prep/station_flows.parquet

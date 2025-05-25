@@ -1,8 +1,8 @@
-import gzip, json
+import gzip, json, os
 from google.cloud import storage
 import functions_framework
 
-BUCKET = "divvy-live-us-central1"
+BUCKET = os.getenv('BUCKET_NAME', 'your-bucket-name')  # Replace with your bucket name
 client = storage.Client()
 blob   = client.bucket(BUCKET).blob("aggregated/live_dpi.json.gz")
 

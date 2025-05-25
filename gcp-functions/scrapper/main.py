@@ -1,8 +1,8 @@
-import json, gzip, io, datetime as dt, requests, functions_framework
+import json, gzip, io, datetime as dt, requests, functions_framework, os
 from google.cloud import storage
 import pytz
 
-BUCKET = "divvy-live-us-central1"
+BUCKET = os.getenv('BUCKET_NAME', 'your-bucket-name')  # Replace with your bucket name
 FEED   = "https://gbfs.divvybikes.com/gbfs/en/station_status.json"
 client = storage.Client()
 bucket = client.bucket(BUCKET)

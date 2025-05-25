@@ -1,0 +1,43 @@
+# Template: Copy this to gcloud-scheduler and it will use your config.env values
+# Or better yet, just run this directly after sourcing config.env
+
+# Source environment configuration
+if [ -f config.env ]; then
+    source config.env
+    echo "✅ Using environment from config.env"
+    echo "   Project: $GCP_PROJECT"
+    echo "   Region: $REGION"
+else
+    echo "Warning: config.env not found. Using default values."
+    export REGION="us-central1"
+fi
+
+echo "🕐 Setting up Cloud Scheduler jobs..."
+
+# Delete existing jobs if they exist (ignore errors)
+gcloud scheduler jobs delete divvy-scraper-15 --location=$REGION --quiet 2>/dev/null || true
+gcloud scheduler jobs delete divvy-rollup-daily --location=$REGION --quiet 2>/dev/null || true
+
+# Every 15 minutes scraper
+echo "Creating scraper job (every 15 minutes)..."
+gcloud scheduler jobs create http divvy-scraper-15 \
+  --schedule "*/15 * * * *" \
+  --uri $(gcloud functions describe divvy-scraper --gen2 --region $REGION --format 'value(serviceConfig.uri)') \
+  --http-method GET \
+  --time-zone "America/Chicago" \
+  --location $REGION
+
+# Daily roll-up at 02:15 AM Central Time
+echo "Creating rollup job (daily at 2:15 AM)..."
+gcloud scheduler jobs create http divvy-rollup-daily \
+  --schedule "15 2 * * *" \
+  --uri $(gcloud functions describe divvy-rollup --gen2 --region $REGION --format 'value(serviceConfig.uri)') \
+  --http-method GET \
+  --time-zone "America/Chicago" \
+  --location $REGION
+
+echo "✅ Cloud Scheduler jobs created successfully!"
+echo ""
+echo "To view jobs: gcloud scheduler jobs list --location=$REGION"
+echo "To test scraper: gcloud scheduler jobs run divvy-scraper-15 --location=$REGION"
+echo "To test rollup: gcloud scheduler jobs run divvy-rollup-daily --location=$REGION" 

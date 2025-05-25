@@ -4,7 +4,7 @@ import pandas as pd
 import functions_framework
 import pytz
 
-BUCKET = "divvy-live-us-central1"
+BUCKET = os.getenv('BUCKET_NAME', 'your-bucket-name')  # Replace with your bucket name
 
 @functions_framework.http
 def rollup(request):

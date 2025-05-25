@@ -1,0 +1,22 @@
+# Template: Copy this to gcloud-deploy-rollup and replace with your values
+# Or better yet, create config.env with your actual values and source it
+
+# Source environment configuration
+if [ -f config.env ]; then
+    source config.env
+    echo "Using environment from config.env"
+else
+    echo "Warning: config.env not found. Using default values."
+    export BUCKET_NAME="YOUR_BUCKET_NAME"
+    export GCP_PROJECT="YOUR_PROJECT_ID"
+    export REGION="us-central1"
+fi
+
+gcloud functions deploy divvy-rollup \
+--gen2 --runtime=python312 --region=$REGION \
+--source=./gcp-functions/rollup \
+--entry-point=rollup \
+--trigger=http --allow-unauthenticated \
+--memory=1GiB --timeout=300s \
+--set-env-vars=BUCKET_NAME=$BUCKET_NAME,GCP_PROJECT=$GCP_PROJECT \
+--max-instances=10 

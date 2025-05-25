@@ -75,7 +75,7 @@ def main():
         print(f"📁 Output file: {output_file}")
         print(f"\nNext steps:")
         print(f"  1. Review the generated {output_file}")
-        print(f"  2. Upload to GCS: gsutil cp {output_file} gs://divvy-live-us-central1/")
+        print(f"  2. Upload to GCS: gsutil cp {output_file} gs://YOUR_BUCKET_NAME/")
     else:
         print("\n❌ Process failed. Please check the errors above.")
 
