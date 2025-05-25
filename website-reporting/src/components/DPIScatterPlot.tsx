@@ -23,6 +23,7 @@ interface ChartDataPoint {
   y: number;
   dpi: number;
   station_id: string;
+  station_name: string;
   priority: 'HIGH' | 'MEDIUM' | 'LOW';
 }
 
@@ -31,7 +32,8 @@ const CustomTooltip = ({ active, payload }: any) => {
     const data = payload[0].payload;
     return (
       <div className="bg-white p-3 border rounded-lg shadow-lg">
-        <p className="font-semibold">{`Station: ${data.station_id}`}</p>
+        <p className="font-semibold text-gray-900">{data.station_name}</p>
+        <p className="text-xs text-gray-500 font-mono mb-2">{`ID: ${data.station_id}`}</p>
         <p className="text-sm">{`Overflow/Dock: ${data.x.toFixed(2)}`}</p>
         <p className="text-sm">{`% Time Full: ${data.y.toFixed(1)}%`}</p>
         <p className="text-sm font-semibold">{`DPI: ${data.dpi.toFixed(3)}`}</p>
@@ -55,6 +57,7 @@ export default function DPIScatterPlot({ data }: DPIScatterPlotProps) {
     y: station.pct_full * 100, // Convert to percentage
     dpi: station.dpi,
     station_id: station.station_id,
+    station_name: station.station_name,
     priority: getPriorityLevel(station.dpi),
   }));
 

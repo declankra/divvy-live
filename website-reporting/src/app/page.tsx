@@ -4,6 +4,7 @@ import { Suspense } from 'react';
 import SummaryCards from '../components/SummaryCards';
 import StationRankingsTable from '../components/StationRankingsTable';
 import DPIScatterPlot from '../components/DPIScatterPlot';
+import Footer from '../components/Footer';
 import { useDPIData } from '@/hooks/useDPIData';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AlertCircle, Loader2 } from 'lucide-react';
@@ -59,11 +60,41 @@ export default function Dashboard() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            🚲 Divvy Live Dashboard
+            🚲 Divvy Live: Dock Pressure Index Dashboard
           </h1>
           <p className="text-gray-600">
             Real-time station analysis and DPI (Dock Priority Index) rankings
           </p>
+        </div>
+
+        {/* Project Context & Purpose */}
+        <div className="mb-8">
+          <Card className="bg-blue-50 border-blue-200">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-blue-900">
+                🤔 What is this?
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-blue-800">
+              <p className="mb-4">
+                <strong>The Question:</strong> Which Divvy bike station needs more racks?
+              </p>
+              <p className="mb-4">
+                As a curiousChicago resident who bikes everywhere, I've always wondered which stations are truly overwhelmed and would benefit from additional docks. This dashboard answers that question using real data!
+              </p>
+              <div className="bg-white/50 rounded-lg p-4 mb-4">
+                <h4 className="font-semibold mb-2">How we measure "dock pressure":</h4>
+                <ul className="space-y-2 text-sm">
+                  <li><strong>🚲 Net bike accumulation:</strong> Stations that collect more bikes than they release</li>
+                  <li><strong>⏰ Time spent full:</strong> How often riders actually hit a "no docks available" wall</li>
+                  <li><strong>📊 DPI Score:</strong> Combines both metrics - higher score = stronger case for more racks</li>
+                </ul>
+              </div>
+              <p className="text-sm">
+                <strong>Data sources:</strong> Live GBFS feeds (updated every 20 minutes) + 12 months of historical trip data from Chicago's Open Data Portal
+              </p>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Summary Cards */}
@@ -102,17 +133,19 @@ export default function Dashboard() {
           </Card>
         </div>
 
-        {/* Footer */}
-        <div className="text-center text-sm text-gray-500">
+        {/* Data Info */}
+        <div className="text-center text-sm text-gray-500 mb-8">
           <p>
             Data updated: {new Date(data.metadata.last_updated).toLocaleString()}
           </p>
           <p>
             Total stations: {data.metadata.total_stations} | 
-            Top DPI: {data.metadata.top_dpi.toFixed(3)}
+            Top DPI: {data.metadata.top_dpi.toFixed(3)} ({data.metadata.top_station_name})
           </p>
         </div>
       </div>
+      
+      <Footer />
     </div>
   );
 }

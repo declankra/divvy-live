@@ -330,6 +330,7 @@ def rollup(request):
         # Calculate final DPI
         res = con.sql("""
             SELECT h.station_id,
+                   cap.name                                             AS station_name,
                    ROUND((h.ends - h.starts)::FLOAT / cap.capacity, 3)   AS overflow_per_dock,
                    ROUND(pf.pct_full, 3)                                AS pct_full,
                    ROUND((h.ends - h.starts)::FLOAT / cap.capacity * pf.pct_full, 3) AS dpi

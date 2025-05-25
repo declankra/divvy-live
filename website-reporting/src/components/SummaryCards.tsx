@@ -47,7 +47,7 @@ export default function SummaryCards({ data }: SummaryCardsProps) {
             {metadata.top_dpi.toFixed(3)}
           </div>
           <p className="text-xs text-gray-500 mt-1">
-            Most urgent station
+            {metadata.top_station_name}
           </p>
         </CardContent>
       </Card>

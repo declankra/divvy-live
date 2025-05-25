@@ -36,6 +36,7 @@ export async function GET(request: NextRequest) {
     // Validate each station has required fields
     const validatedData = dpiData.filter(station => {
       return station.station_id && 
+             station.station_name &&
              typeof station.overflow_per_dock === 'number' &&
              typeof station.pct_full === 'number' &&
              typeof station.dpi === 'number';
@@ -55,6 +56,7 @@ export async function GET(request: NextRequest) {
         total_stations: sortedData.length,
         last_updated: new Date().toISOString(),
         top_dpi: sortedData.length > 0 ? sortedData[0].dpi : 0,
+        top_station_name: sortedData.length > 0 ? sortedData[0].station_name : 'N/A',
         data_source: 'GCP Cloud Function'
       }
     };
@@ -79,6 +81,7 @@ export async function GET(request: NextRequest) {
         total_stations: 0,
         last_updated: new Date().toISOString(),
         top_dpi: 0,
+        top_station_name: 'N/A',
         data_source: 'Error'
       }
     };

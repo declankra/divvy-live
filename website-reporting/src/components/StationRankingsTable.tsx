@@ -20,7 +20,7 @@ export default function StationRankingsTable({ data }: StationRankingsTableProps
         <TableHeader>
           <TableRow>
             <TableHead className="w-16">Rank</TableHead>
-            <TableHead>Station ID</TableHead>
+            <TableHead>Station Name</TableHead>
             <TableHead className="text-right">Overflow/Dock</TableHead>
             <TableHead className="text-right">% Full</TableHead>
             <TableHead className="text-right">DPI</TableHead>
@@ -36,8 +36,15 @@ export default function StationRankingsTable({ data }: StationRankingsTableProps
               <TableCell className="font-medium text-gray-500">
                 {index + 1}
               </TableCell>
-              <TableCell className="font-mono text-sm">
-                {station.station_id}
+              <TableCell className="font-medium">
+                <div className="max-w-xs">
+                  <div className="font-medium text-gray-900 truncate">
+                    {station.station_name}
+                  </div>
+                  <div className="text-xs text-gray-500 font-mono">
+                    ID: {station.station_id}
+                  </div>
+                </div>
               </TableCell>
               <TableCell className="text-right font-mono">
                 {station.overflow_per_dock.toFixed(2)}
