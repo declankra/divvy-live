@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense } from 'react';
+
 import SummaryCards from '../components/SummaryCards';
 import StationRankingsTable from '../components/StationRankingsTable';
 import DPIScatterPlot from '../components/DPIScatterPlot';
@@ -80,18 +80,28 @@ export default function Dashboard() {
                 <strong>The Question:</strong> Which Divvy bike station needs more racks?
               </p>
               <p className="mb-4">
-                As a curiousChicago resident who bikes everywhere, I've always wondered which stations are truly overwhelmed and would benefit from additional docks. This dashboard answers that question using real data!
+                As a curious Chicago resident who bikes everywhere, I&apos;ve always wondered which stations are truly overwhelmed and would benefit from additional docks. This dashboard answers that question using real data!
               </p>
               <div className="bg-white/50 rounded-lg p-4 mb-4">
-                <h4 className="font-semibold mb-2">How we measure "dock pressure":</h4>
+                <h4 className="font-semibold mb-2">How we measure &quot;dock pressure&quot;:</h4>
                 <ul className="space-y-2 text-sm">
                   <li><strong>🚲 Net bike accumulation:</strong> Stations that collect more bikes than they release</li>
-                  <li><strong>⏰ Time spent full:</strong> How often riders actually hit a "no docks available" wall</li>
+                  <li><strong>⏰ Time spent full:</strong> How often riders actually hit a &quot;no docks available&quot; wall</li>
                   <li><strong>📊 DPI Score:</strong> Combines both metrics - higher score = stronger case for more racks</li>
                 </ul>
               </div>
-              <p className="text-sm">
-                <strong>Data sources:</strong> Live GBFS feeds (updated every 20 minutes) + 12 months of historical trip data from Chicago's Open Data Portal
+              <p className="text-sm mb-2">
+                <strong>Data sources:</strong> Live GBFS feeds (updated every 20 minutes) + 12 months of historical trip data from Chicago&apos;s Open Data Portal
+              </p>
+              <p className="text-xs">
+                <a 
+                  href="https://github.com/declankra/divvy-live" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 underline"
+                >
+                  📂 View project source code on GitHub
+                </a>
               </p>
             </CardContent>
           </Card>

@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { DPIStation, DPIResponse, DPIError } from '@/types/dpi';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // GCP Cloud Function URL - you may need to update this with your actual function URL
     const GCP_FUNCTION_URL = process.env.GCP_API_FUNCTION_URL || 
@@ -91,7 +91,7 @@ export async function GET(request: NextRequest) {
 }
 
 // Optional: Add a POST method for testing
-export async function POST(request: NextRequest) {
+export async function POST() {
   return NextResponse.json(
     { message: 'POST method not supported for DPI endpoint' },
     { status: 405 }
