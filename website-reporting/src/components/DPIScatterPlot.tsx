@@ -74,29 +74,32 @@ export default function DPIScatterPlot({ data }: DPIScatterPlotProps) {
   const medianX = sortedByX[Math.floor(sortedByX.length / 2)]?.x || 0;
   const medianY = sortedByY[Math.floor(sortedByY.length / 2)]?.y || 50;
 
+  // Check if we're on mobile (you could also use a hook like useMediaQuery)
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
   return (
     <div className="w-full">
       {/* Quadrant Legend */}
       <div className="grid grid-cols-2 gap-4 mb-6 text-sm">
+        <div className="bg-amber-50 p-3 rounded-lg border border-amber-200">
+          <div className="font-semibold text-amber-800 mb-1">🚐 Needs More Vans</div>
+          <div className="text-amber-600">Low overflow + High % full</div>
+          <div className="text-xs text-amber-500 mt-1">More frequent rebalancing</div>
+        </div>
         <div className="bg-red-50 p-3 rounded-lg border border-red-200">
           <div className="font-semibold text-red-800 mb-1">🚲 Needs More Racks</div>
           <div className="text-red-600">High overflow + High % full</div>
           <div className="text-xs text-red-500 mt-1">Add docks + increase rebalancing</div>
         </div>
-        <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
-          <div className="font-semibold text-blue-800 mb-1">🚐 Needs More Vans</div>
-          <div className="text-blue-600">Low overflow + High % full</div>
-          <div className="text-xs text-blue-500 mt-1">More frequent rebalancing</div>
+        <div className="bg-emerald-50 p-3 rounded-lg border border-emerald-200">
+          <div className="font-semibold text-emerald-800 mb-1">✅ Optimal</div>
+          <div className="text-emerald-600">Low overflow + Low % full</div>
+          <div className="text-xs text-emerald-500 mt-1">Balanced usage and capacity</div>
         </div>
-        <div className="bg-yellow-50 p-3 rounded-lg border border-yellow-200">
-          <div className="font-semibold text-yellow-800 mb-1">📊 Needs Usage Boost</div>
-          <div className="text-yellow-600">High overflow + Low % full</div>
-          <div className="text-xs text-yellow-500 mt-1">Marketing/pricing to increase usage</div>
-        </div>
-        <div className="bg-green-50 p-3 rounded-lg border border-green-200">
-          <div className="font-semibold text-green-800 mb-1">✅ Optimal</div>
-          <div className="text-green-600">Low overflow + Low % full</div>
-          <div className="text-xs text-green-500 mt-1">Balanced usage and capacity</div>
+        <div className="bg-amber-50 p-3 rounded-lg border border-amber-200">
+          <div className="font-semibold text-amber-800 mb-1">📊 Needs Usage Boost</div>
+          <div className="text-amber-600">High overflow + Low % full</div>
+          <div className="text-xs text-amber-500 mt-1">Marketing/pricing to increase usage</div>
         </div>
       </div>
 
@@ -107,9 +110,9 @@ export default function DPIScatterPlot({ data }: DPIScatterPlotProps) {
             data={chartData}
             margin={{
               top: 20,
-              right: 20,
-              bottom: 60,
-              left: 60,
+              right: isMobile ? 10 : 20,
+              bottom: isMobile ? 40 : 60,
+              left: isMobile ? 40 : 60,
             }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
@@ -119,13 +122,13 @@ export default function DPIScatterPlot({ data }: DPIScatterPlotProps) {
               x={medianX} 
               stroke="#9ca3af" 
               strokeDasharray="5 5"
-              label={{ value: "Median Overflow", position: "top" }}
+              label={!isMobile ? { value: "Median Overflow", position: "top" } : undefined}
             />
             <ReferenceLine 
               y={medianY} 
               stroke="#9ca3af" 
               strokeDasharray="5 5"
-              label={{ value: "Median % Full", position: "left" }}
+              label={!isMobile ? { value: "Median % Full", position: "insideTopRight" } : undefined}
             />
             
             <XAxis 
@@ -139,6 +142,7 @@ export default function DPIScatterPlot({ data }: DPIScatterPlotProps) {
                 style: { textAnchor: 'middle' }
               }}
               domain={['dataMin - 1', 'dataMax + 1']}
+              tickFormatter={(value) => Number(value).toFixed(2)}
             />
             <YAxis 
               type="number"
@@ -168,7 +172,7 @@ export default function DPIScatterPlot({ data }: DPIScatterPlotProps) {
       </div>
 
       {/* Priority Legend */}
-      <div className="flex justify-center gap-6 mt-4 text-sm">
+      <div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-6 mt-4 text-sm">
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-full bg-red-500"></div>
           <span>🔴 High Priority (DPI ≥ 20)</span>
