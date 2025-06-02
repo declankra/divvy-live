@@ -92,7 +92,7 @@ export default function DPIScatterPlot({ data }: DPIScatterPlotProps) {
           <div className="text-xs text-red-500 mt-1">Add docks + increase rebalancing</div>
         </div>
         <div className="bg-emerald-50 p-3 rounded-lg border border-emerald-200">
-          <div className="font-semibold text-emerald-800 mb-1">✅ Optimal</div>
+          <div className="font-semibold text-emerald-800 mb-1">✅ Fine </div>
           <div className="text-emerald-600">Low overflow + Low % full</div>
           <div className="text-xs text-emerald-500 mt-1">Balanced usage and capacity</div>
         </div>
