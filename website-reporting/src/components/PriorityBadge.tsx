@@ -5,7 +5,7 @@ interface PriorityBadgeProps {
 }
 
 export function getPriorityLevel(dpi: number): 'HIGH' | 'MEDIUM' | 'LOW' {
-  if (dpi >= 20) return 'HIGH';
+  if (dpi >= 10) return 'HIGH';
   if (dpi >= 5) return 'MEDIUM';
   return 'LOW';
 }

@@ -97,9 +97,9 @@ export default function DPIScatterPlot({ data }: DPIScatterPlotProps) {
           <div className="text-xs text-emerald-500 mt-1">Balanced usage and capacity</div>
         </div>
         <div className="bg-amber-50 p-3 rounded-lg border border-amber-200">
-          <div className="font-semibold text-amber-800 mb-1">📊 Needs Usage Boost</div>
+          <div className="font-semibold text-amber-800 mb-1">📊 Needs Usage Boost or Less Vans</div>
           <div className="text-amber-600">High overflow + Low % full</div>
-          <div className="text-xs text-amber-500 mt-1">Marketing/pricing to increase usage</div>
+          <div className="text-xs text-amber-500 mt-1">Marketing/pricing to increase usage or decrease rebalancing</div>
         </div>
       </div>
 
@@ -175,11 +175,11 @@ export default function DPIScatterPlot({ data }: DPIScatterPlotProps) {
       <div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-6 mt-4 text-sm">
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-full bg-red-500"></div>
-          <span>🔴 High Priority (DPI ≥ 20)</span>
+          <span>🔴 High Priority (DPI ≥ 10)</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-full bg-amber-500"></div>
-          <span>🟡 Medium Priority (DPI 5-20)</span>
+          <span>🟡 Medium Priority (DPI 5-10)</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
