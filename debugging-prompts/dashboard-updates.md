@@ -37,7 +37,6 @@ Personal touch adds character to the project and provides attribution. The track
 ---
 
 ## Future Updates
-- [ ] Add sorting capabilities to station rankings table
-- [ ] Implement search/filter functionality
+- [x] Add sorting capabilities to station rankings table
 - [ ] Add historical trend visualization
 - [ ] Consider map integration for geographic context 
