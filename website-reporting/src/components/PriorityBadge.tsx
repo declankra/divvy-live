@@ -28,7 +28,7 @@ export default function PriorityBadge({ dpi }: PriorityBadgeProps) {
     ? 'destructive' 
     : priority === 'MEDIUM' 
     ? 'secondary' 
-    : 'default';
+    : 'secondary';
 
   const emoji = priority === 'HIGH' ? '🔴' : priority === 'MEDIUM' ? '🟡' : '🟢';
 
