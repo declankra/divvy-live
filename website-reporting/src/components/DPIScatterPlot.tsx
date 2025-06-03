@@ -71,8 +71,39 @@ export default function DPIScatterPlot({ data }: DPIScatterPlotProps) {
   // Calculate median values for reference lines
   const sortedByX = [...chartData].sort((a, b) => a.x - b.x);
   const sortedByY = [...chartData].sort((a, b) => a.y - b.y);
-  const medianX = sortedByX[Math.floor(sortedByX.length / 2)]?.x || 0;
-  const medianY = sortedByY[Math.floor(sortedByY.length / 2)]?.y || 50;
+  
+  // Calculate proper median (average of middle values for even-length arrays)
+  const getMedian = (sortedArray: ChartDataPoint[], accessor: (item: ChartDataPoint) => number) => {
+    const len = sortedArray.length;
+    if (len === 0) return 0;
+    
+    if (len % 2 === 1) {
+      // Odd length: return middle value
+      return accessor(sortedArray[Math.floor(len / 2)]);
+    } else {
+      // Even length: return average of two middle values
+      const mid1 = accessor(sortedArray[len / 2 - 1]);
+      const mid2 = accessor(sortedArray[len / 2]);
+      return (mid1 + mid2) / 2;
+    }
+  };
+  
+  const medianX = getMedian(sortedByX, (item) => item.x);
+  const medianY = getMedian(sortedByY, (item) => item.y);
+
+  // Data distribution analysis
+  const yValues = chartData.map(d => d.y);
+  const zeroCount = yValues.filter(y => y === 0).length;
+  const nonZeroCount = yValues.filter(y => y > 0).length;
+  const maxY = Math.max(...yValues);
+  const minY = Math.min(...yValues);
+  
+  // Calculate more meaningful thresholds instead of median Y
+  const meanY = yValues.reduce((sum, y) => sum + y, 0) / yValues.length;
+  const percentile75Y = sortedByY[Math.floor(sortedByY.length * 0.75)]?.y || 0;
+  
+  // Use mean for Y threshold since median is 0 (56.5% of stations never get full)
+  const thresholdY = meanY;
 
   // Check if we're on mobile (you could also use a hook like useMediaQuery)
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
@@ -97,7 +128,7 @@ export default function DPIScatterPlot({ data }: DPIScatterPlotProps) {
           <div className="text-xs text-emerald-500 mt-1">Balanced usage and capacity</div>
         </div>
         <div className="bg-amber-50 p-3 rounded-lg border border-amber-200">
-          <div className="font-semibold text-amber-800 mb-1">📊 Needs Usage Boost or Less Vans</div>
+          <div className="font-semibold text-amber-800 mb-1">💸 Needs Usage Boost or 🚐 Less Vans</div>
           <div className="text-amber-600">High overflow + Low % full</div>
           <div className="text-xs text-amber-500 mt-1">Marketing/pricing to increase usage or decrease rebalancing</div>
         </div>
@@ -122,13 +153,13 @@ export default function DPIScatterPlot({ data }: DPIScatterPlotProps) {
               x={medianX} 
               stroke="#9ca3af" 
               strokeDasharray="5 5"
-              label={!isMobile ? { value: "Median Overflow", position: "top" } : undefined}
+              label={!isMobile ? { value: `Median Overflow: ${medianX.toFixed(2)}`, position: "top" } : undefined}
             />
             <ReferenceLine 
-              y={medianY} 
+              y={thresholdY} 
               stroke="#9ca3af" 
               strokeDasharray="5 5"
-              label={!isMobile ? { value: "Median % Full", position: "insideTopRight" } : undefined}
+              label={!isMobile ? { value: `Threshold % Full: ${thresholdY.toFixed(1)}%`, position: "insideTopRight" } : undefined}
             />
             
             <XAxis 
@@ -174,16 +205,33 @@ export default function DPIScatterPlot({ data }: DPIScatterPlotProps) {
       {/* Priority Legend */}
       <div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-6 mt-4 text-sm">
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-red-500"></div>
           <span>🔴 High Priority (DPI ≥ 10)</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-amber-500"></div>
           <span>🟡 Medium Priority (DPI 5-10)</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
           <span>🟢 Low Priority (DPI &lt; 5)</span>
+        </div>
+      </div>
+
+      {/* Data Distribution Info */}
+      <div className="mt-6 p-4 bg-gray-50 rounded-lg border">
+        <h4 className="font-semibold text-gray-800 mb-2">📊 Data Distribution</h4>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-gray-600">
+          <div>
+            <span className="font-medium">Total Stations:</span> {chartData.length}
+          </div>
+          <div>
+            <span className="font-medium">Never Full:</span> {zeroCount} ({(zeroCount/chartData.length*100).toFixed(1)}%)
+          </div>
+          <div>
+            <span className="font-medium">Sometimes Full:</span> {nonZeroCount} ({(nonZeroCount/chartData.length*100).toFixed(1)}%)
+          </div>
+        </div>
+        <div className="mt-2 text-xs text-gray-500">
+          <span className="font-medium">Note:</span> The horizontal line shows the average % full ({meanY.toFixed(1)}%) since the median is 0% 
+          (most stations never reach full capacity).
         </div>
       </div>
     </div>
