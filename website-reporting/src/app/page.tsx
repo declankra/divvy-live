@@ -65,6 +65,16 @@ export default function Dashboard() {
           <p className="text-gray-600">
             Real-time station analysis and DPI (Dock Priority Index) rankings
           </p>
+          <div className="mt-3">
+            <a 
+              href="/Divvy-Bike-Business-Case-Review.pdf" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium underline"
+            >
+              📄 View the Business Case Report
+            </a>
+          </div>
         </div>
 
         {/* Project Context & Purpose */}
