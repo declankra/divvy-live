@@ -60,7 +60,15 @@ export default function Dashboard() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            🚲 Divvy Live: Dock Pressure Index Dashboard
+            <span className="inline-block align-middle mr-2">
+              <img
+                src="https://images.ctfassets.net/p6ae3zqfb1e3/5TYz0fZSG65zAh1sbYrsPs/a45351a5ca504cd45808f79a6a5d7b1b/Divvy-Bike_new_0119_v3.png"
+                alt="Divvy Bike Logo"
+                width="100"
+                height="100"
+              />
+            </span>
+            Divvy DPI Live: Dock Pressure Index Dashboard
           </h1>
           <p className="text-gray-600">
             Real-time station analysis and DPI (Dock Priority Index) rankings
@@ -79,25 +87,30 @@ export default function Dashboard() {
 
         {/* Project Context & Purpose */}
         <div className="mb-8">
-          <Card className="bg-blue-50 border-blue-200">
+          <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-blue-900">
-                🤔 What is this?
+              <CardTitle className="flex items-center gap-2">
+                What is this?
               </CardTitle>
             </CardHeader>
-            <CardContent className="text-blue-800">
+            <CardContent>
               <p className="mb-4">
-                <strong>The Question:</strong> Which Divvy bike station needs more racks?
+                <strong>The Question:</strong> Which Divvy bike station could benefit from another rack?
               </p>
               <p className="mb-4">
-                As a curious Chicago resident who bikes everywhere, I&apos;ve always wondered which stations are truly overwhelmed and would benefit from additional docks. This dashboard answers that question using real data!
+                As a curious Chicago resident who bikes everywhere, I&apos;ve always wondered which stations are truly overwhelmed and would benefit from additional racks. This dashboard answers that question using real data!
               </p>
               <div className="bg-white/50 rounded-lg p-4 mb-4">
                 <h4 className="font-semibold mb-2">How we measure &quot;dock pressure&quot;:</h4>
                 <ul className="space-y-2 text-sm">
-                  <li><strong>🚲 Net bike accumulation:</strong> Stations that collect more bikes than they release</li>
-                  <li><strong>⏰ Time spent full:</strong> How often riders actually hit a &quot;no docks available&quot; wall</li>
-                  <li><strong>📊 DPI Score:</strong> Combines both metrics - higher score = stronger case for more racks</li>
+                  <li><strong>1. Net bike accumulation:</strong> Stations that collect more bikes than they release</li>
+                  <li><strong>2. Time spent full:</strong> How often riders actually hit a &quot;no docks available&quot; wall</li>
+                  <li>
+                    <br />
+                    <strong>DPI Score:</strong> <span className="font-mono bg-blue-100 px-2 py-1 rounded">DPI = Net Bike Accumulation + Time Spent Full</span>
+                    <br />
+                    <span className="text-xs text-blue-700">Higher DPI = stronger case for more racks</span>
+                  </li>
                 </ul>
               </div>
               <p className="text-sm mb-2">
